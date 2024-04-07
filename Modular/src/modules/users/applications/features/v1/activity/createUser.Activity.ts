@@ -12,7 +12,7 @@ import mediatR from '@/shared/medaitR/mediatR';
 import { Job } from '@/shared/utils/job';
 import { delay } from '@/shared/utils/delay';
 import { WelcomeEmailIntegrationEvent } from '@/modules/notification/applications/features/v1/activity/welcomeEmail.activity';
-import { HashPasswordService, IHashPasswordService } from '../../../shared/services/hashPassword';
+import { HashPasswordService, IHashPasswordService } from '../../../shared/services/hashPassword.service.';
 import Container from 'typedi';
 
 
