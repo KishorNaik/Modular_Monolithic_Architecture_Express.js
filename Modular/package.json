@@ -32,6 +32,7 @@
     "hpp": "^0.2.3",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
+    "linq": "^4.0.2",
     "mediatr-ts": "^1.2.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.9.3",
