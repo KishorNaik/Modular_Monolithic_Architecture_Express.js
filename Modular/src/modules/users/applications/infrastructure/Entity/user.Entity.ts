@@ -14,4 +14,7 @@ export class UserEntity{
 
     @Column("varchar",{length:100})
     password:string;
+
+    @Column("int")
+    orgId:number;
 }

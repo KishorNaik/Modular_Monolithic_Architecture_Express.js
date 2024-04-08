@@ -19,9 +19,9 @@ export class CreateOrganizationRequestDTO implements ICreateOrganizationRequestD
 
 // #region Response
 export interface ICreateOrganizationResponseDTO{
-    id:string
+    id:number
 }
 
 export class CreateOrganizationResponseDTO implements ICreateOrganizationResponseDTO{
-    id: string;
+    id: number;
 }

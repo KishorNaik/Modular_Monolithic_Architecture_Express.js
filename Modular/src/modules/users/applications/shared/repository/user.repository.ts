@@ -25,8 +25,10 @@ export class UserSharedRepository implements IUserSharedRepository{
         {
             var result=await this.appDataSource.createQueryBuilder(queryRunner)
                             .select("u")
+                            .addSelect("u.id")
                             .addSelect("u.emailId")
                             .addSelect("u.fullName")
+                            .addSelect("u.orgId")
                             .from(UserEntity, "u")
                             .where("u.emailId = :email", { email: email })
                             .getRawOne<UserEntity>();
@@ -47,8 +49,10 @@ export class UserSharedRepository implements IUserSharedRepository{
         {
             var result=await this.appDataSource.createQueryBuilder(queryRunner)
                         .select("u")
+                        .addSelect("u.id")
                         .addSelect("u.emailId")
                         .addSelect("u.fullName")
+                        .addSelect("u.orgId")
                         .from(UserEntity, "u")
                         .where("u.id = :id", { id: id })
                         .getRawOne<UserEntity>();

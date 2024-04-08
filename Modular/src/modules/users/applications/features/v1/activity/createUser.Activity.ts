@@ -19,6 +19,9 @@ import { Err, Ok, Result } from "neverthrow";
 import { UserEntity } from '../../../infrastructure/Entity/user.Entity';
 import UserDataSource  from '../../../infrastructure/user.DataStore';
 import { DataSource } from 'typeorm';
+import { GetOrgByIdIntegrationService } from '@/modules/organization/applications/features/v1/activity/getOrgById.Activity';
+import { get } from 'http';
+import { GetOrgByIdResponseDTO } from '@/modules/organization/contracts/features/getOrgById.Contracts';
 
 
 // #region Controller Service
@@ -63,11 +66,33 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
         this.hashPasswordService = Container.get(HashPasswordService);
     }
 
-    private map(value:CreateUserCommand): UserEntity{
+    
+
+    private async isOrgExistsAsync(id:number): Promise<Result<boolean,HttpException>>{
+        try
+        {
+            if(!id)
+                return new Err(new HttpException(StatusCodes.BAD_REQUEST,"id is null"));
+
+            // check if org exists
+            var getOrgExistsIntegrationServiceResult:DataResponse<GetOrgByIdResponseDTO>=await mediatR.send<DataResponse<GetOrgByIdResponseDTO>>(new GetOrgByIdIntegrationService(id));
+
+            if(getOrgExistsIntegrationServiceResult.Success===false)
+                return new Err(new HttpException(getOrgExistsIntegrationServiceResult.StatusCode,getOrgExistsIntegrationServiceResult.Message));
+
+            return new Ok(true);
+        }
+        catch(ex){
+            return new Err(new HttpException(StatusCodes.INTERNAL_SERVER_ERROR,ex.message));
+        }
+    }
+
+    private map(value:CreateUserRequestDTO): UserEntity{
         let userEntity: UserEntity=new UserEntity();
-        userEntity.fullName=value.createUserRequestDTO.fullName;
-        userEntity.emailId=value.createUserRequestDTO.email;
-        userEntity.password=value.createUserRequestDTO.password;
+        userEntity.fullName=value.fullName;
+        userEntity.emailId=value.email;
+        userEntity.password=value.password;
+        userEntity.orgId=value.orgId;
         return userEntity;
     }
 
@@ -108,6 +133,12 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
         if(!value)
             return CommandException.commandError("argument is null", StatusCodes.BAD_REQUEST);
 
+        // Is Org Exists
+        const isOrgExistsResult=await this.isOrgExistsAsync(value.createUserRequestDTO.orgId);
+
+        if(isOrgExistsResult.isErr())
+            return CommandException.commandError(isOrgExistsResult.error.message,isOrgExistsResult.error.status);
+
         // Generate Hash Password.
         let hashedPassword =await this.hashPasswordService.hashPasswordAsync(value.createUserRequestDTO.password);
         if(hashedPassword.isErr())
@@ -115,7 +146,7 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
 
         // Map
         value.createUserRequestDTO.password=hashedPassword.value; // Replace With Hash Password
-        const userEntity:UserEntity=this.map(value);
+        const userEntity:UserEntity=this.map(value.createUserRequestDTO);
         // Save User
         const addUserResult=await this.addAsync(userEntity);
 

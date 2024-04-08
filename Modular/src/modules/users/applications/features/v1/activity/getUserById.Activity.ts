@@ -18,7 +18,7 @@ import mediatR from '@/shared/medaitR/mediatR';
 export class GetUserByIdController{
 
     @Get('/:id')
-    @HttpCode(StatusCodes.CREATED)
+    @HttpCode(StatusCodes.OK)
     @OnUndefined(StatusCodes.BAD_REQUEST)
     @OpenAPI({ summary: 'Return find a user', tags: ['users'] })
     public async getUserByIdAsync( @Param('id') userId: number,@Res() res: Response) {
