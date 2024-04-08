@@ -27,7 +27,7 @@ export class CreateUserRequestDTO implements ICreateUserRequestDTO{
 
 // #region Response
 export class CreateUserResponseDTO {
-   id:string;
+   id:number;
 }
 
 // #endregion

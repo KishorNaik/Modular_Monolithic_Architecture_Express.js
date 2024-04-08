@@ -14,6 +14,11 @@ import { delay } from '@/shared/utils/delay';
 import { WelcomeEmailIntegrationEvent } from '@/modules/notification/applications/features/v1/activity/welcomeEmail.activity';
 import { HashPasswordService, IHashPasswordService } from '../../../shared/services/hashPassword.service.';
 import Container from 'typedi';
+import { CommandException, HttpException } from '@/shared/utils/httpException';
+import { Err, Ok, Result } from "neverthrow";
+import { UserEntity } from '../../../infrastructure/Entity/user.Entity';
+import UserDataSource  from '../../../infrastructure/user.DataStore';
+import { DataSource } from 'typeorm';
 
 
 // #region Controller Service
@@ -58,20 +63,72 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
         this.hashPasswordService = Container.get(HashPasswordService);
     }
 
+    private map(value:CreateUserCommand): UserEntity{
+        let userEntity: UserEntity=new UserEntity();
+        userEntity.fullName=value.createUserRequestDTO.fullName;
+        userEntity.emailId=value.createUserRequestDTO.email;
+        userEntity.password=value.createUserRequestDTO.password;
+        return userEntity;
+    }
+
+    private async addAsync(userEntity:UserEntity): Promise<Result<number,HttpException>>{
+        try
+        {
+            if(!userEntity)
+                return new Err(new HttpException(StatusCodes.BAD_REQUEST,"userEntity is null"));
+
+            let appDataSource: DataSource=UserDataSource;
+
+            var result=await appDataSource.manager
+                    .createQueryBuilder()
+                    .insert()
+                    .into(UserEntity)
+                    .values(userEntity)
+                    .execute();
+
+            if(!result.identifiers[0].id)
+                return new Err(new HttpException(StatusCodes.INTERNAL_SERVER_ERROR,"userEntity is null"));
+
+            return new Ok(result.identifiers[0].id);
+        }
+        catch(ex){
+            return new Err(new HttpException(StatusCodes.INTERNAL_SERVER_ERROR,ex.message));
+        }
+    }
+
+    private response(id:number):DataResponse<CreateUserResponseDTO>{
+        let createResponseDTO:CreateUserResponseDTO=new CreateUserResponseDTO();
+        createResponseDTO.id=id;
+
+        return DataResponseFactory.Response(true,StatusCodes.CREATED,createResponseDTO,'User created successfully');
+    }
+
     public async  handle(value: CreateUserCommand): Promise<DataResponse<CreateUserResponseDTO>> {
        
-        // Business Logic Here
-        const createUserResponseDTO = new CreateUserResponseDTO();
-        createUserResponseDTO.id =Guid.create().toString();
+        if(!value)
+            return CommandException.commandError("argument is null", StatusCodes.BAD_REQUEST);
 
         // Generate Hash Password.
         let hashedPassword =await this.hashPasswordService.hashPasswordAsync(value.createUserRequestDTO.password);
-        console.log(`Hash Password : ${hashedPassword}`);
-       
-        // Call Domain Event
-        Job(()=> mediatR.publish(new UserCreatedDomainEvent(createUserResponseDTO.id,value.createUserRequestDTO.fullName,value.createUserRequestDTO.email)));
+        if(hashedPassword.isErr())
+            return CommandException.commandError(hashedPassword.error.message,hashedPassword.error.status);
 
-        return DataResponseFactory.Response(true,StatusCodes.CREATED,createUserResponseDTO,'User created successfully');
+        // Map
+        value.createUserRequestDTO.password=hashedPassword.value; // Replace With Hash Password
+        const userEntity:UserEntity=this.map(value);
+        // Save User
+        const addUserResult=await this.addAsync(userEntity);
+
+        if(addUserResult.isErr())
+            return CommandException.commandError(addUserResult.error.message,addUserResult.error.status);
+
+        const id:number=addUserResult.value;
+
+        //Call Domain Event
+        Job(()=> mediatR.publish(new UserCreatedDomainEvent(id,value.createUserRequestDTO.fullName,value.createUserRequestDTO.email)));
+
+        //Response
+        return this.response(id);
     }
 
 }
@@ -83,14 +140,14 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
 class UserCreatedDomainEvent implements INotification{
 
     
-    constructor(id:string,fullName:string,emailId:string) {
+    constructor(id:number,fullName:string,emailId:string) {
         this._id = id;
         this._fullName = fullName;
         this._emailId = emailId;
     }
 
-    private _id: string;
-    public get id(): string {
+    private _id: number;
+    public get id(): number {
         return this._id;
     }
 
