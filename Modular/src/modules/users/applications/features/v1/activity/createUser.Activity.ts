@@ -61,8 +61,11 @@ class CreateUserCommand implements IRequest<DataResponse<CreateUserResponseDTO>>
 class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,DataResponse<CreateUserResponseDTO>>{
     
     private readonly hashPasswordService:IHashPasswordService;
+    private readonly appDataSource:DataSource;
 
     constructor() {
+
+        this.appDataSource=UserDataSource;
         this.hashPasswordService = Container.get(HashPasswordService);
     }
 
@@ -102,9 +105,7 @@ class CreateUserCommandHandler implements IRequestHandler<CreateUserCommand,Data
             if(!userEntity)
                 return new Err(new HttpException(StatusCodes.BAD_REQUEST,"userEntity is null"));
 
-            let appDataSource: DataSource=UserDataSource;
-
-            var result=await appDataSource.manager
+            var result=await this.appDataSource.manager
                     .createQueryBuilder()
                     .insert()
                     .into(UserEntity)
