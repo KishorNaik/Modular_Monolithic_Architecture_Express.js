@@ -25,7 +25,7 @@ import { GetOrgByIdResponseDTO } from '@/modules/organization/contracts/features
 
 
 // #region Controller Service
-@JsonController("/v1/users")
+@JsonController("/api/v1/users")
 @OpenAPI({tags:["users"]})
 export class CreateUserController{
 

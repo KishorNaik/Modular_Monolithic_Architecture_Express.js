@@ -1,6 +1,6 @@
 import { DataResponse, DataResponseFactory } from "@/shared/models/response/data.Response";
 import { IRequest, IRequestHandler, requestHandler } from "mediatr-ts";
-import { Get, HttpCode, JsonController, OnUndefined, Param, Res } from "routing-controllers";
+import { Get, HttpCode, JsonController, OnUndefined, Param, Res, UseBefore } from "routing-controllers";
 import { OpenAPI } from "routing-controllers-openapi";
 import Container from "typedi";
 import { DataSource } from "typeorm";
@@ -11,15 +11,17 @@ import { OrgEntity } from "../../../Infrastructure/Entity/org.Entity";
 import { Response, query } from "express";
 import mediatR from "@/shared/medaitR/mediatR";
 import { GetOrgByIdRequestDTO, GetOrgByIdResponseDTO } from "@/modules/organization/contracts/features/getOrgById.Contracts";
+import { authenticateJwt } from "@/middlewares/auth.middleware";
 
-@JsonController("/v1/organizations")
+@JsonController("/api/v1/organizations")
 @OpenAPI({tags:["organizations"]})
 export class GetOrgByIdController{
 
     @Get('/:id')
     @HttpCode(StatusCodes.OK)
     @OnUndefined(StatusCodes.BAD_REQUEST)
-    @OpenAPI({ summary: 'Return find a org', tags: ['organizations'] })
+    @OpenAPI({ summary: 'Return find a org', tags: ['organizations'], security: [{ BearerAuth: [] }] })
+    @UseBefore(authenticateJwt)
     public async getUserByIdAsync( @Param('id') userId: number,@Res() res: Response) {
       const request = new GetOrgByIdRequestDTO();
       request.id = userId;

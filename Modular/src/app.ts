@@ -79,18 +79,30 @@ export class App {
       components: {
         schemas: schemas as { [schema: string]: any },
         securitySchemes: {
-          basicAuth: {
-            scheme: 'basic',
+          // basicAuth: {
+          //   scheme: 'basic',
+          //   type: 'http',
+          // },
+          BearerAuth: {
             type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            in: 'header',           
           },
         },
       },
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       info: {
         description: 'Generated with `routing-controllers-openapi`',
         title: 'A sample API',
         version: '1.0.0',
       },
     });
+    console.log(JSON.stringify(spec));
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spec));
   }
 

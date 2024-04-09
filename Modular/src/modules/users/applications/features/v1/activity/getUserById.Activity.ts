@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { OpenAPI } from 'routing-controllers-openapi';
-import { Body, Get, HttpCode, JsonController, OnUndefined, Param, Post, Res } from 'routing-controllers';
+import { Body, Get, HttpCode, JsonController, OnUndefined, Param, Post, Res, UseBefore } from 'routing-controllers';
 import { Response } from 'express';
 import { HttpException, QueryException } from '@/shared/utils/httpException';
 import { StatusCodes } from 'http-status-codes';
@@ -11,16 +11,18 @@ import { IUserSharedRepository, UserSharedRepository } from '../../../shared/rep
 import Container from 'typedi';
 import { UserEntity } from '../../../infrastructure/Entity/user.Entity';
 import mediatR from '@/shared/medaitR/mediatR';
+import { authenticateJwt } from '@/middlewares/auth.middleware';
 
 // #region Controller
-@JsonController("/v1/users")
+@JsonController("/api/v1/users")
 @OpenAPI({tags:["users"]})
 export class GetUserByIdController{
 
     @Get('/:id')
     @HttpCode(StatusCodes.OK)
     @OnUndefined(StatusCodes.BAD_REQUEST)
-    @OpenAPI({ summary: 'Return find a user', tags: ['users'] })
+    @OpenAPI({ summary: 'Return find a user', tags: ['users'], security: [{ BearerAuth: [] }] })
+    @UseBefore(authenticateJwt)
     public async getUserByIdAsync( @Param('id') userId: number,@Res() res: Response) {
       const request = new GetUserByIdRequestDTO();
       request.id = userId;

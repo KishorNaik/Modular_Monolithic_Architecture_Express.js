@@ -17,7 +17,7 @@ import { Err, Ok, Result } from 'neverthrow';
 import { Job } from '@/shared/utils/job';
 // region Controller Service
 
-@JsonController("/v1/organizations")
+@JsonController("/api/v1/organizations")
 @OpenAPI({tags:["organizations"]})
 export class CreateOrganizationController{
 

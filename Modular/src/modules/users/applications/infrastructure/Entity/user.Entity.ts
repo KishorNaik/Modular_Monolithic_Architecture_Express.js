@@ -17,4 +17,7 @@ export class UserEntity{
 
     @Column("int")
     orgId:number;
+
+    @Column("longtext",{nullable:true})
+    refreshToken:string;
 }
