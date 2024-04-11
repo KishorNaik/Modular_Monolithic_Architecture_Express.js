@@ -33,7 +33,11 @@ export class RemoveUserController{
     @OnUndefined(StatusCodes.BAD_REQUEST)
     @UseBefore(ValidationMiddleware(RemoveUserRequestDTO),authenticateJwt)
     public async removeAsync(@Param("id") id: number,@Res() res: Response) {
-        
+        const request=new RemoveUserRequestDTO();
+        request.id=id;
+
+        var response=await mediatR.send<DataResponse<RemoveUserResponseDTO>>(new RemoveUserCommand(request));
+        return res.status(response.StatusCode).json(response);
     }
 }
 
