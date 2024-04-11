@@ -1,4 +1,4 @@
-import { DataSource, QueryRunner } from "typeorm";
+import { DataSource, QueryRunner, SelectQueryBuilder } from "typeorm";
 import UserDataSource  from "../../infrastructure/user.DataStore";
 import { UserEntity } from "../../infrastructure/Entity/user.Entity";
 import { Service } from "typedi";
@@ -11,6 +11,7 @@ export interface IUserSharedRepository{
     getUserByIdAsync(id:number, queryRunner?:QueryRunner):Promise<Result<UserEntity,HttpException>>;
     getUserWithPasswordByEmailAsync(email:string, queryRunner?:QueryRunner):Promise<Result<UserEntity,HttpException>>;
     updateRefreshTokenAsync(id:number, refreshToken:string, queryRunner?:QueryRunner):Promise<Result<boolean,HttpException>>;
+    getUsers(queryRunner?:QueryRunner):Result<SelectQueryBuilder<UserEntity>,HttpException>
 }
 
 @Service()
@@ -21,6 +22,7 @@ export class UserSharedRepository implements IUserSharedRepository{
     constructor(){
         this.appDataSource=UserDataSource;
     }
+    
     
 
     public async getUserByEmailAsync(email: string, queryRunner?: QueryRunner): Promise<Result<UserEntity,HttpException>> {
@@ -121,6 +123,27 @@ export class UserSharedRepository implements IUserSharedRepository{
        {
             return new Err(new HttpException(StatusCodes.INTERNAL_SERVER_ERROR,ex.message));
        }
+    }
+    
+    public getUsers(queryRunner?: QueryRunner): Result<SelectQueryBuilder<UserEntity>, HttpException> {
+        try
+        {
+            var result=this.appDataSource.createQueryBuilder(queryRunner)
+                            .select("u")
+                            .addSelect("u.id")
+                            .addSelect("u.emailId")
+                            .addSelect("u.fullName")
+                            .addSelect("u.orgId")
+                            .from(UserEntity, "u");
+
+            if(!result)
+                return new Err(new HttpException(StatusCodes.NOT_FOUND,"User not found"));
+
+            return new Ok(result);
+        }
+        catch(ex){
+            return new Err(new HttpException(StatusCodes.INTERNAL_SERVER_ERROR,ex.message));
+        }
     }
 
 }

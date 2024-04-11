@@ -1,3 +1,4 @@
+import { StatusEnum } from "@/shared/models/enums/status.enum";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:"userentity"})
@@ -20,4 +21,7 @@ export class UserEntity{
 
     @Column("longtext",{nullable:true})
     refreshToken:string;
+
+    @Column("enum",{enum:StatusEnum, default:StatusEnum.INACTIVE})
+    status: StatusEnum
 }

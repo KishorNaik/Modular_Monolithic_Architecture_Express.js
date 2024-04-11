@@ -21,7 +21,7 @@ export class GetUserByIdController{
     @Get('/:id')
     @HttpCode(StatusCodes.OK)
     @OnUndefined(StatusCodes.BAD_REQUEST)
-    @OpenAPI({ summary: 'Return find a user', tags: ['users'], security: [{ BearerAuth: [] }] })
+    @OpenAPI({ summary: 'return find users', tags: ['users'], security: [{ BearerAuth: [] }] })
     @UseBefore(authenticateJwt)
     public async getUserByIdAsync( @Param('id') userId: number,@Res() res: Response) {
       const request = new GetUserByIdRequestDTO();

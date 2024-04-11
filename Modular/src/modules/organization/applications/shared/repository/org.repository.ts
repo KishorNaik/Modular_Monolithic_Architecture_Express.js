@@ -5,6 +5,7 @@ import { Service } from "typedi";
 import { DataSource, QueryRunner } from "typeorm";
 import { StatusCodes } from "http-status-codes";
 import OrgDataSource from "../../Infrastructure/org.DataSource";
+import { StatusEnum } from "@/shared/models/enums/status.enum";
 
 export interface IOrgSharedRepository{
     getOrgByIdAsync(id:number,queryRunner?:QueryRunner):Promise<Result<OrgEntity,HttpException>>;
@@ -32,6 +33,7 @@ export class OrgSharedRepository implements IOrgSharedRepository{
                             .addSelect("o.location")
                             .from(OrgEntity, "o")
                             .where("o.id = :id", { id: id })
+                            .andWhere("o.status = :status", { status: StatusEnum.ACTIVE })
                             .getRawOne<OrgEntity>();
 
             if(!result)
