@@ -219,7 +219,7 @@ class RemoveUserSagaOrchestratorHandler implements IRequestHandler<RemoveUserSag
             })
             .compensationActivity("Remove-Activity","Remove-Org-RollBack",async (sagaResult)=>{
                 // Revert Remove Organization
-                if(sagaResult.IsSuccess && sagaResult.Results.removeOrgResult.isErr()){
+                if(sagaResult.Results.removeOrgResult.isErr()){
                     await mediatR.send<DataResponse<RemoveOrganizationResponseDTO>>(new RemoveOrganizationRollbackIntegrationService(value.userEntity.orgId));
                 }
 
@@ -227,7 +227,7 @@ class RemoveUserSagaOrchestratorHandler implements IRequestHandler<RemoveUserSag
             })
             .compensationActivity("Remove-Activity","Remove-User-RollBack",async (sagaResult)=>{
                 // Revert Remove User
-                if(sagaResult.IsSuccess && sagaResult.Results.removeUserResult.isErr()){
+                if(sagaResult.Results.removeUserResult.isErr()){
                     await sagaResult.Results.queryRunner.rollbackTransaction();
                 }
 
