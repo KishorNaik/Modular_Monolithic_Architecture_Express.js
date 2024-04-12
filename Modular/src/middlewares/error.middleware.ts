@@ -10,12 +10,12 @@ export const ErrorMiddleware = (error: HttpException, req: Request, res: Respons
 
     logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
 
-    const errorResponse:DataResponse<undefined>={
-      Success:false,
-      StatusCode:status,
-      Data:undefined,
-      Message:message
-    }
+    const errorResponse: DataResponse<undefined> = {
+      Success: false,
+      StatusCode: status,
+      Data: undefined,
+      Message: message,
+    };
 
     res.status(status).json(errorResponse);
   } catch (error) {

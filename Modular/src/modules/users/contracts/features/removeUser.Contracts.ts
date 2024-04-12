@@ -1,13 +1,11 @@
 // #region Request
 export class RemoveUserRequestDTO {
-
-    public id: number;
+  public id: number;
 }
 // #endregion
 
 // #region Response
-export class RemoveUserResponseDTO{
-
-    public updatedDateTime: Date;
+export class RemoveUserResponseDTO {
+  public updatedDateTime: Date;
 }
-// #endregion 
+// #endregion

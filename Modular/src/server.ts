@@ -5,5 +5,5 @@ import { organizationModules } from './modules/organization';
 
 ValidateEnv();
 
-const app = new App([...userModules,...organizationModules]);
+const app = new App([...userModules, ...organizationModules]);
 app.listen();

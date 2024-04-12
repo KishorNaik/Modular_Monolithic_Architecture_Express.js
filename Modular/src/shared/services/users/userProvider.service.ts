@@ -1,28 +1,27 @@
-import { Request } from "express";
-import { Service } from "typedi";
+import { Request } from 'express';
+import { Service } from 'typedi';
 import jwt from 'jsonwebtoken';
-import { IClaims } from "../../../modules/users/applications/shared/services/jwt.service";
-import { HttpException } from "@/shared/utils/httpException";
-import { Result } from "neverthrow";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-import { SECRET_KEY } from "@/config";
+import { IClaims } from '../../../modules/users/applications/shared/services/jwt.service';
+import { HttpException } from '@/shared/utils/httpException';
+import { Result } from 'neverthrow';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
+import { SECRET_KEY } from '@/config';
 
-export interface IUserProviderService{
-    getUserId(request:Request): string;
-    getUserRole(request:Request):string;
+export interface IUserProviderService {
+  getUserId(request: Request): string;
+  getUserRole(request: Request): string;
 }
 
 @Service()
-export class UserProviderService implements IUserProviderService{
-    
-    public getUserId(request:Request): string {
-        const decoded:IClaims=jwt.verify(request.headers.authorization.split(' ')[1],SECRET_KEY) as IClaims;
-        return decoded.id;
-    }
+export class UserProviderService implements IUserProviderService {
+  public getUserId(request: Request): string {
+    const decoded: IClaims = jwt.verify(request.headers.authorization.split(' ')[1], SECRET_KEY) as IClaims;
+    return decoded.id;
+  }
 
-    public getUserRole(request:Request): string {
-        const decoded:IClaims=jwt.verify(request.headers.authorization.split(' ')[1],SECRET_KEY) as IClaims;
-        return decoded.role;
-    }
+  public getUserRole(request: Request): string {
+    const decoded: IClaims = jwt.verify(request.headers.authorization.split(' ')[1], SECRET_KEY) as IClaims;
+    return decoded.role;
+  }
 }

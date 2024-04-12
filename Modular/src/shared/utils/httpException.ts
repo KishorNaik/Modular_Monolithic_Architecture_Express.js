@@ -14,17 +14,13 @@ export class HttpException extends HttpError {
 }
 
 export class QueryException {
-
-  public static queryError<TResult>(errorMessage:string, statusCode: StatusCodes): DataResponse<TResult>{
-      return DataResponseFactory.Response<TResult>(false, statusCode, undefined, errorMessage);
+  public static queryError<TResult>(errorMessage: string, statusCode: StatusCodes): DataResponse<TResult> {
+    return DataResponseFactory.Response<TResult>(false, statusCode, undefined, errorMessage);
   }
-      
 }
 
 export class CommandException {
-
-  public static commandError<TResult>(errorMessage:string, statusCode: StatusCodes): DataResponse<TResult>{
-      return DataResponseFactory.Response<TResult>(false, statusCode, undefined, errorMessage);
+  public static commandError<TResult>(errorMessage: string, statusCode: StatusCodes): DataResponse<TResult> {
+    return DataResponseFactory.Response<TResult>(false, statusCode, undefined, errorMessage);
   }
-      
 }

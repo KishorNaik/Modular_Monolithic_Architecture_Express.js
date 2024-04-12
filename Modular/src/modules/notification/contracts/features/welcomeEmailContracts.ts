@@ -1,6 +1,6 @@
-import { INotification } from "mediatr-ts";
+import { INotification } from 'mediatr-ts';
 
-export interface IWelcomeEmailRequestDTO{
-    fullName:string;
-    emailId:string;
+export interface IWelcomeEmailRequestDTO {
+  fullName: string;
+  emailId: string;
 }
