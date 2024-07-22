@@ -22,17 +22,17 @@ import { RemoveOrganizationResponseDTO } from '@/modules/organization/contracts/
 import { Err, Ok, Result } from 'neverthrow';
 import { StatusEnum } from '@/shared/models/enums/status.enum';
 import Enumerable from 'linq';
-import { IUserProviderService, UserProviderService } from '@/shared/services/users/userProvider.service';
+import { IUserTokenProviderService, UserTokenProviderService } from '@/shared/services/users/userTokenProvider.service';
 import { SagaBuilder, SagaResult } from '@/shared/utils/saga.Builder';
 
 // #region Controller Service
 @JsonController('/api/v1/users')
 @OpenAPI({ tags: ['users'] })
 export class RemoveUserController {
-  private readonly userProvider: IUserProviderService;
+  private readonly userProvider: IUserTokenProviderService;
 
   public constructor() {
-    this.userProvider = Container.get(UserProviderService);
+    this.userProvider = Container.get(UserTokenProviderService);
   }
 
   @Delete()

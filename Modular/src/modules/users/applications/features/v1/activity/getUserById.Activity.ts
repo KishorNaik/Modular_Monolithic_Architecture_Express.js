@@ -12,16 +12,16 @@ import Container from 'typedi';
 import { UserEntity } from '../../../infrastructure/Entity/user.Entity';
 import mediatR from '@/shared/medaitR/mediatR';
 import { authenticateJwt } from '@/middlewares/auth.middleware';
-import { IUserProviderService, UserProviderService } from '@/shared/services/users/userProvider.service';
+import { IUserTokenProviderService, UserTokenProviderService } from '@/shared/services/users/userTokenProvider.service';
 
 // #region Controller
 @JsonController('/api/v1/users')
 @OpenAPI({ tags: ['users'] })
 export class GetUserByIdController {
-  private readonly userProviderService: IUserProviderService;
+  private readonly userProviderService: IUserTokenProviderService;
 
   public constructor() {
-    this.userProviderService = Container.get(UserProviderService);
+    this.userProviderService = Container.get(UserTokenProviderService);
   }
 
   @Get('/user')

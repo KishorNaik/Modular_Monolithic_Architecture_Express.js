@@ -3,7 +3,7 @@ import { ValidationMiddleware } from '@/middlewares/validation.middleware';
 import { UpdateUserRequestDTO, UpdateUserResponseDTO } from '@/modules/users/contracts/features/updateUser.Contract';
 import mediatR from '@/shared/medaitR/mediatR';
 import { DataResponse, DataResponseFactory } from '@/shared/models/response/data.Response';
-import { IUserProviderService, UserProviderService } from '@/shared/services/users/userProvider.service';
+import { IUserTokenProviderService, UserTokenProviderService } from '@/shared/services/users/userTokenProvider.service';
 import { CommandException, HttpException } from '@/shared/utils/httpException';
 import { Response } from 'express';
 import { Request } from 'express-jwt';
@@ -20,10 +20,10 @@ import { UserEntity } from '../../../infrastructure/Entity/user.Entity';
 @JsonController('/api/v1/users')
 @OpenAPI({ tags: ['users'] })
 export class UpdateUserController {
-    private readonly userProvider: IUserProviderService;
+    private readonly userProvider: IUserTokenProviderService;
 
     public constructor() {
-        this.userProvider = Container.get(UserProviderService);
+        this.userProvider = Container.get(UserTokenProviderService);
     }
 
     @Put()

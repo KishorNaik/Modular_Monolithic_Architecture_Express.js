@@ -8,13 +8,13 @@ import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { SECRET_KEY } from '@/config';
 
-export interface IUserProviderService {
+export interface IUserTokenProviderService {
   getUserId(request: Request): string;
   getUserRole(request: Request): string;
 }
 
 @Service()
-export class UserProviderService implements IUserProviderService {
+export class UserTokenProviderService implements IUserTokenProviderService {
   public getUserId(request: Request): string {
     const decoded: IClaims = jwt.verify(request.headers.authorization.split(' ')[1], SECRET_KEY) as IClaims;
     return decoded.id;

@@ -2,13 +2,13 @@ import { expressjwt } from 'express-jwt';
 import { DataResponseFactory } from '@/shared/models/response/data.Response';
 import { SECRET_KEY } from '@/config';
 import Container from 'typedi';
-import { IUserProviderService, UserProviderService } from '@/shared/services/users/userProvider.service';
+import { IUserTokenProviderService, UserTokenProviderService } from '@/shared/services/users/userTokenProvider.service';
 
 export const authenticateJwt = expressjwt({ secret: SECRET_KEY, algorithms: ['HS256'] });
 
 export function authorizeRole(role: string) {
   return function (req: any, res: any, next: any) {
-    const userProviderService: IUserProviderService = Container.get(UserProviderService);
+    const userProviderService: IUserTokenProviderService = Container.get(UserTokenProviderService);
 
     const roleFromToken = userProviderService.getUserRole(req);
 
