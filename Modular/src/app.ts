@@ -104,7 +104,7 @@ export class App {
                 version: '1.0.0',
             },
         });
-        console.log(JSON.stringify(spec));
+        //console.log(JSON.stringify(spec));
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spec));
     }
 
