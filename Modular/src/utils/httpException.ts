@@ -1,6 +1,6 @@
 import { HttpError } from 'routing-controllers';
-import { DataResponse, DataResponseFactory } from '../models/response/data.Response';
 import { StatusCodes } from 'http-status-codes';
+import { DataResponse, DataResponseFactory } from '@/shared/models/response/data.Response';
 
 export class HttpException extends HttpError {
 	public status: number;

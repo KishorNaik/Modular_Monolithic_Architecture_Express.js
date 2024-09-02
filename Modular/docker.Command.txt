@@ -1,0 +1,16 @@
+#Build Image
+docker build -t my-node-app:latest .
+
+#Run Container // Dev
+docker run -p 3000:3000 my-node-app:latest
+
+#Run Container // Prod
+docker run -p 8080:8080 my-node-app:latest
+
+#View Logs
+docker logs my-node-app:latest
+
+#Interactive Shells
+docker run -it <image_name> /bin/bash
+# Inside the container
+npm run start

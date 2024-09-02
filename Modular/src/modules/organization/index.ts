@@ -3,4 +3,8 @@ import { GetOrgByIdController } from './applications/features/v1/activity/getOrg
 import { RemoveOrganizationController } from './applications/features/v1/activity/removeOrganization.Activity';
 
 // Module Registration
-export const organizationModules: Function[] = [CreateOrganizationController, GetOrgByIdController, RemoveOrganizationController];
+export const organizationModules: Function[] = [
+	CreateOrganizationController,
+	GetOrgByIdController,
+	RemoveOrganizationController,
+];

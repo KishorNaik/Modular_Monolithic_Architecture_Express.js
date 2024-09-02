@@ -8,11 +8,11 @@ import { UserLoginController } from './applications/features/v1/activity/userLog
 
 // Module Registration
 export const userModules: Function[] = [
-    CreateUserController,
-    GetUserByIdController,
-    UserLoginController,
-    RefreshTokenController,
-    GetUsersController,
-    RemoveUserController,
-    UpdateUserController,
+	CreateUserController,
+	GetUserByIdController,
+	UserLoginController,
+	RefreshTokenController,
+	GetUsersController,
+	RemoveUserController,
+	UpdateUserController,
 ];

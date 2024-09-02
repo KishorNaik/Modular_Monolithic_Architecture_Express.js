@@ -1,4 +1,4 @@
 export interface IJwtTokenDTO {
-  accessToken: string;
-  refreshToken: string;
+	accessToken: string;
+	refreshToken: string;
 }

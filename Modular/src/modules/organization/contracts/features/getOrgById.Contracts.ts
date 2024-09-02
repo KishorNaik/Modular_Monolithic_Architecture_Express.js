@@ -1,19 +1,19 @@
 // #region Request
 
 export interface IGetOrgByIdRequestDTO {
-  id: number;
+	id: number;
 }
 
 export class GetOrgByIdRequestDTO implements IGetOrgByIdRequestDTO {
-  id: number;
+	id: number;
 }
 
 // #endregion
 
 // #region Response
 export class GetOrgByIdResponseDTO {
-  id: number;
-  name: string;
-  location: string;
+	id: number;
+	name: string;
+	location: string;
 }
 // #endregion

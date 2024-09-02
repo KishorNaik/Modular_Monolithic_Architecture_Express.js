@@ -3,22 +3,36 @@ import { logger } from '@/shared/utils/logger';
 import { DataResponse } from '@/shared/models/response/data.Response';
 import { HttpException } from '@/shared/utils/httpException';
 
-export const ErrorMiddleware = (error: HttpException, req: Request, res: Response, next: NextFunction) => {
-  try {
-    const status: number = error.status || 500;
-    const message: string = error.message || 'Something went wrong';
+export const ErrorMiddleware = (
+	error: HttpException,
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		let status: number;
+		let message: string;
 
-    logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
+		if ('StatusCode' in error && 'Message' in error) {
+			const dataResponse: DataResponse<undefined> = error as DataResponse<undefined>;
+			status = dataResponse.StatusCode || 500;
+			message = dataResponse.Message || 'Something went wrong';
+		} else {
+			status = error.status || 500;
+			message = error.message || 'Something went wrong';
+		}
 
-    const errorResponse: DataResponse<undefined> = {
-      Success: false,
-      StatusCode: status,
-      Data: undefined,
-      Message: message,
-    };
+		logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
 
-    res.status(status).json(errorResponse);
-  } catch (error) {
-    next(error);
-  }
+		const errorResponse: DataResponse<undefined> = {
+			Success: false,
+			StatusCode: status,
+			Data: undefined,
+			Message: message,
+		};
+
+		res.status(status).json(errorResponse);
+	} catch (error) {
+		next(error);
+	}
 };

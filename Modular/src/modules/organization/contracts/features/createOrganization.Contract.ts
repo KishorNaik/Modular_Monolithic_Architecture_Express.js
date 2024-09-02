@@ -3,28 +3,28 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 // #region Request
 export interface ICreateOrganizationRequestDTO {
-  name?: string;
-  location?: string;
+	name?: string;
+	location?: string;
 }
 
 export class CreateOrganizationRequestDTO implements ICreateOrganizationRequestDTO {
-  @IsNotEmpty()
-  @IsString()
-  @Type(() => String)
-  name?: string;
+	@IsNotEmpty()
+	@IsString()
+	@Type(() => String)
+	name?: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @Type(() => String)
-  location?: string;
+	@IsNotEmpty()
+	@IsString()
+	@Type(() => String)
+	location?: string;
 }
 //endregion
 
 // #region Response
 export interface ICreateOrganizationResponseDTO {
-  id: number;
+	id: number;
 }
 
 export class CreateOrganizationResponseDTO implements ICreateOrganizationResponseDTO {
-  id: number;
+	id: number;
 }
